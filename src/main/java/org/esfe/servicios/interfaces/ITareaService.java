@@ -10,11 +10,4 @@ import java.util.Optional;
 public interface ITareaService {
     Page<Tareas> buscarTodosPaginados(Pageable pageable);
 
-    List<Tareas> obtenerTodos();
-
-    Optional<Tareas> buscarPorId(Integer id);
-
-    Tareas crearOEditar(Tareas tareas);
-
-    void eliminarPorId(Integer grupo);
 }
