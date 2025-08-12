@@ -1,0 +1,59 @@
+<html lang="en"
+      xmlns:layout="http://www.ultrang.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="content">
+  <div th:if="${msg != null}">
+  <script>
+    Swal.fire({
+    title: "Confirmación",
+    text: '[[${msg}]]',
+    icon: "success"
+    });
+  </script>
+
+</div>
+
+<!-- Mostrar mensaje de error en caso de error -->
+<div th:if="${error != null}">
+  <script>
+    Swal.fire({
+      title: "Error",
+      text: '[[${error}]]',
+      icon: "error"
+    });
+  </script>
+</div>
+
+  <h1>Gestión de tareas</h1>
+  <a th:href="@{/tareas/create}" class="btn btn-outline-primary"> Nueva tarea</a>
+  <table class = "table table-striped">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Descripcion</th>
+      <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="Item : ${tareas}">
+      <td th:text="${item.id}"></td>
+      <td th:text="${item.description}"></td>
+      <td>
+        <a th:href="@{/tareas/details/{id} (id = ${item.id)}" class="ptn btn-outline-secundary">Detalles</a>
+        <a th:href="@{/tareas/edit/{id} (id = ${item.id)}" class="ptn btn-outline-info">Editar</a>
+        <a th:href="@{/tareas/remove/{id} (id = ${item.id)}" class="ptn btn-outline-danger">Eliminar</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li class="page-item" th:each="pageNumber : ${pageNumbers}">
+        <a class="page-link" th:herf="@{|/tareas?page=${pageNumber}|}" th:text="${pageNumber}"></a>
+      </li>
+    </ul>
+  </nav>
+
+</div>

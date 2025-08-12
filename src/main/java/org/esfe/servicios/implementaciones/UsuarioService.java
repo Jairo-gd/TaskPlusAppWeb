@@ -1,13 +1,35 @@
 package org.esfe.servicios.implementaciones;
 
-import org.esfe.modelos.Tareas;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.esfe.modelos.Usuario;
+import org.esfe.repositorios.IUsuarioRepository;
+import org.esfe.servicios.interfaces.IUsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.util.List;
-import java.util.Optional;
+public abstract class UsuarioService extends Usuario implements IUsuarioService {
+    private Map<String, UsuarioService> usuariosRegistrados = new HashMap<>();
+    @Autowired
+    private IUsuarioRepository usuarioRepository;
 
-public class UsuarioService {
+    @Override
+    public Usuario registrar(Usuario usuario) {
+        return null;
+    }
+
+    @Override
+    public Usuario login(String email, String password) {
+        Usuario u = usuariosRegistrados.get(email);
+        if (u != null && u.getPassword().equals(password)) {
+            return u;
+        }
+        return null;
+    }
+
+    @Override
+    public Usuario obtenerPorCorreo(String correo) {
+        return usuariosRegistrados.get(correo);
+    }
 }
 
 
