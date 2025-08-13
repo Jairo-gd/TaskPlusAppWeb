@@ -40,7 +40,6 @@ public class CategoriaController {
                     .collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
         }
-
         return "categoria/index";
     }
 }

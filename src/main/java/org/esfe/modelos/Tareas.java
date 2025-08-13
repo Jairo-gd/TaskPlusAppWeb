@@ -13,6 +13,7 @@ public class Tareas {
 
     @NotBlank(message = "La descripción es requerida")
     private String descripcion;
+    private String categoria;
     private byte status;
 
     public Integer getId() {
@@ -30,6 +31,13 @@ public class Tareas {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String gategoria) {
+        this.categoria = categoria;
+    }
 
     public byte getStatus() {
         return status;
@@ -37,5 +45,19 @@ public class Tareas {
 
     public void setStatus(byte status) {
         this.status = status;
+    }
+    public String getStrEstatus(){
+        String str="";
+        switch (status) {
+            case 1:
+                str = "COMPLETADA";
+                break;
+            case 2:
+                str = "PENDIENTE";
+                break;
+            default:
+                str = "";
+        }
+        return str;
     }
 }
