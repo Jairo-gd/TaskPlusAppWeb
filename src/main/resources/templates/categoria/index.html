@@ -36,13 +36,13 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="Item : ${categorias}">
+        <tr th:each="item : ${categorias}">
             <td th:text="${item.id}"></td>
-            <td th:text="${item.name}"></td>
+            <td th:text="${item.nombre}"></td>
             <td>
-                <a th:href="@{/categorias/details/{id} (id = ${item.id)}" class="ptn btn-outline-secundary">Detalles</a>
-                <a th:href="@{/categorias/edit/{id} (id = ${item.id)}" class="ptn btn-outline-info">Editar</a>
-                <a th:href="@{/categorias/remove/{id} (id = ${item.id)}" class="ptn btn-outline-danger">Eliminar</a>
+                <a th:href="@{/categoria/details/{id} (id = ${item.id})}" class="ptn btn-outline-secundary">Detalles</a>
+                <a th:href="@{/categoria/edit/{id} (id = ${item.id})}" class="ptn btn-outline-info">Editar</a>
+                <a th:href="@{/categoria/remove/{id} (id = ${item.id})}" class="ptn btn-outline-danger">Eliminar</a>
             </td>
         </tr>
         </tbody>
@@ -55,5 +55,4 @@
             </li>
         </ul>
     </nav>
-
 </div>
