@@ -16,7 +16,6 @@
     <div class="min-h-screen bg-white flex items-center justify-center p-6 sm:p-8">
         <div class="bg-white p-8 sm:p-10 rounded-3xl shadow-2xl w-full max-w-xl border border-gray-200 transform hover:scale-102 transition-transform duration-300 ease-in-out">
             <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center flex items-center justify-center gap-4">
-                <!-- Icono SVG para 'PlusCircle' -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-circle text-green-600">
                     <circle cx="12" cy="12" r="10"/>
                     <path d="M12 8v8"/>
@@ -56,9 +55,7 @@
                         <option th:each="categoria : ${categoriasDisponibles}"
                                 th:value="${categoria.id}"
                                 th:text="${categoria.nombre}"
-                                th:selected="${cat.id == tareas.categoria}"></option>
-                        <!-- Asegúrate de que tu controlador pasa una lista llamada 'categoriasDisponibles'
-                             y que cada objeto egoen la lista tenga propiedades 'id' y 'nombre' (o ajusta th:value/th:text) -->
+                                th:selected="${categoria.id == tareas.categoria}"></option>
                     </select>
                 </div>
 
