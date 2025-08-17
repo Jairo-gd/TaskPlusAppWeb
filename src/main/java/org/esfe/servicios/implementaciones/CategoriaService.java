@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
 @Service
 public class CategoriaService implements ICategoriaService {
+
     @Autowired
     private ICategoriaRepository categoriaRepository;
 
@@ -22,6 +24,7 @@ public class CategoriaService implements ICategoriaService {
 
     @Override
     public List<Categorias> obtenerTodos() {
+        // Único método para obtener todas las categorías
         return categoriaRepository.findAll();
     }
 
@@ -31,12 +34,19 @@ public class CategoriaService implements ICategoriaService {
     }
 
     @Override
-    public Categorias crearOEditar(Categorias categorias) {
-        return categoriaRepository.save(categorias);
+    public Categorias crearOEditar(Categorias categoria) {
+        return categoriaRepository.save(categoria);
     }
 
     @Override
     public void eliminarPorId(Integer id) {
-         categoriaRepository.deleteById(id);
+        categoriaRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Categorias> buscarTodos() {
+        // Puedes decidir eliminarlo si no lo usas,
+        // o simplemente devolver todas las categorías
+        return categoriaRepository.findAll();
     }
 }

@@ -7,39 +7,86 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/categoria")
 public class CategoriaController {
+
     @Autowired
-    private ICategoriaService _categoriaService;
+    private ICategoriaService categoriaService;
 
     @GetMapping
-    public String index(Model model, @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size){
-        int currentPage = page.orElse(1) - 1; // si no esta seteado se asigna 0
-        int pageSize = size.orElse(5); // tamaño dee la pagina, se asigna 5
-        Pageable pageable = PageRequest.of(currentPage, pageSize);
+    public String index(@RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "5") int size,
+                        Model model) {
 
-        Page<Categorias> categorias = _categoriaService.buscarTodosPaginados(pageable);
-        model.addAttribute("categorias", categorias);
+        Page<Categorias> pagina = categoriaService.buscarTodosPaginados(PageRequest.of(page, size));
 
-        int totalPages = categorias.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+        model.addAttribute("categorias", pagina.getContent()); // 🔑 Aquí mandamos "categorias" (plural)
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", pagina.getTotalPages());
+
+        // Para pintar los números de paginación
+        if (pagina.getTotalPages() > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(0, pagina.getTotalPages() - 1)
                     .boxed()
                     .collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
         }
-        return "categoria/index";
+
+        return "categoria/index"; // ruta de tu index.html
+    }
+
+
+    @GetMapping("/create")
+    public String create(Model model) {
+        model.addAttribute("categoria", new Categorias());
+        return "categoria/create";
+    }
+
+
+    @PostMapping("/save")
+    public String save(@ModelAttribute("categoria") Categorias categoria, Model model) {
+        categoriaService.crearOEditar(categoria);
+        model.addAttribute("msg", "Categoría guardada con éxito");
+        return "redirect:/categoria";
+    }
+
+    // ✅ Editar
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable Integer id, Model model) {
+        Categorias categoria = categoriaService.buscarPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada con id: " + id));
+        model.addAttribute("categoria", categoria);
+        return "categoria/edit";
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute("categoria") Categorias categoria, Model model) {
+        categoriaService.crearOEditar(categoria);
+        model.addAttribute("msg", "Categoría actualizada con éxito");
+        return "redirect:/categoria";
+    }
+
+
+    @GetMapping("/details/{id}")
+    public String details(@PathVariable Integer id, Model model) {
+        Categorias categoria = categoriaService.buscarPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada con id: " + id));
+        model.addAttribute("categoria", categoria);
+        return "categoria/details";
+    }
+
+
+    @GetMapping("/remove/{id}")
+    public String remove(@PathVariable Integer id, Model model) {
+        categoriaService.eliminarPorId(id);
+        model.addAttribute("msg", "Categoría eliminada con éxito");
+        return "redirect:/categoria";
     }
 }

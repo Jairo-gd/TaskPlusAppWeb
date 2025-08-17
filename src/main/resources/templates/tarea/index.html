@@ -1,193 +1,111 @@
 <html lang="en"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="/layouts/_mainLayout" xmlns:th="http://www.w3.org/1999/xhtml">
+      layout:decorate="/layouts/_mainLayout"
+      xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Incluir SweetAlert2 desde un CDN para los mensajes y confirmaciones -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <style>
-    body {
-        font-family: 'Inter', sans-serif;
-    }
-    /* Definir clases de botón base para reutilizar y aplicar estilos de Tailwind */
-    .btn-base {
-        @apply flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg shadow-sm transition duration-150 ease-in-out transform hover:scale-105;
-    }
-    /* Mapear las clases de Bootstrap/personalizadas a estilos de Tailwind */
-    .btn-outline-primary {
-        @apply btn-base text-blue-700 bg-white border border-blue-500 hover:bg-blue-50 hover:border-blue-600;
-    }
-    .btn-outline-secondary { /* Corregido de 'secundary' a 'secondary' */
-        @apply btn-base text-gray-700 bg-white border border-gray-300 hover:bg-gray-50;
-    }
-    .btn-outline-info {
-        @apply btn-base text-purple-700 bg-white border border-purple-300 hover:bg-purple-50;
-    }
-    .btn-outline-danger {
-        @apply btn-base text-red-700 bg-white border border-red-300 hover:bg-red-50;
-    }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
 
-    /* Estilos para la tabla */
-    .table {
-        @apply min-w-full divide-y divide-gray-200;
-    }
-    .table-striped tbody tr:nth-child(odd) {
-        @apply bg-white;
-    }
-    .table-striped tbody tr:nth-child(even) {
-        @apply bg-gray-50;
-    }
-    .table thead th {
-        @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50;
-    }
-    .table tbody td {
-        @apply px-6 py-4 whitespace-nowrap text-sm text-gray-800;
-    }
+        .btn-base {
+            @apply flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg shadow-sm transition duration-150 ease-in-out transform hover:scale-105;
+        }
+        .btn-outline-success {
+            @apply btn-base text-green-700 bg-white border border-green-500 hover:bg-green-50;
+        }
+        .btn-outline-danger {
+            @apply btn-base text-red-700 bg-white border border-red-500 hover:bg-red-50;
+        }
+        .btn-outline-edit {
+            @apply btn-base text-white bg-green-500 hover:bg-green-600;
+        }
+        .btn-estado-completada {
+            @apply px-3 py-1 rounded-full font-bold text-white bg-green-500 hover:bg-green-600 transition duration-200 ease-in-out;
+        }
+        .btn-estado-pendiente {
+            @apply px-3 py-1 rounded-full font-bold text-white bg-yellow-400 hover:bg-yellow-500 transition duration-200 ease-in-out;
+        }
 
-    /* Estilos para paginación */
-    .pagination {
-        @apply flex items-center -space-x-px;
-    }
-    .pagination .page-item .page-link {
-        @apply relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 transition duration-150 ease-in-out rounded-lg mx-1;
-    }
-    .pagination .page-item.active .page-link {
-        @apply bg-blue-600 text-white border-blue-600;
-    }
-  </style>
+        .table {
+            @apply min-w-full divide-y divide-gray-200;
+        }
+        .table-striped tbody tr:nth-child(odd) {
+            @apply bg-white;
+        }
+        .table-striped tbody tr:nth-child(even) {
+            @apply bg-gray-50;
+        }
+        .table thead th {
+            @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50;
+        }
+        .table tbody td {
+            @apply px-6 py-4 whitespace-nowrap text-sm text-gray-800;
+        }
+    </style>
 </head>
 <body>
 <div layout:fragment="content">
-  <!-- Contenedor principal para el diseño mejorado -->
-  <div class="min-h-screen bg-white flex items-center justify-center p-6 sm:p-8">
-    <div class="bg-white p-8 sm:p-10 rounded-3xl shadow-2xl w-full max-w-4xl border border-gray-200">
+    <div class="min-h-screen bg-white flex items-center justify-center p-6 sm:p-8">
+        <div class="bg-white p-8 sm:p-10 rounded-3xl shadow-2xl w-full max-w-5xl border border-gray-200">
 
-      <!-- Mensajes de confirmación y error con SweetAlert2 -->
-      <div th:if="${msg != null}">
-        <script th:inline="javascript">
-          Swal.fire({
-              title: "Confirmación",
-              text: [[${msg}]],
-              icon: "success"
-          });
-        </script>
-      </div>
+            <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center">Gestión de Tareas</h1>
 
-      <div th:if="${error != null}">
-        <script th:inline="javascript">
-          Swal.fire({
-              title: "Error",
-              text: [[${error}]],
-              icon: "error"
-          });
-        </script>
-      </div>
-
-      <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center">Gestión de Tareas</h1>
-      <div class="mb-6 flex justify-start">
-        <a th:href="@{/tarea/create}"
-           class="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white
+            <div class="mb-6 flex justify-start">
+                <a th:href="@{/tarea/create}"
+                   class="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white
                           bg-gradient-to-r from-blue-500 to-blue-700 rounded-full shadow-lg
                           hover:from-blue-600 hover:to-blue-800 transform hover:scale-105
                           focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-75
                           transition duration-300 ease-in-out">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-circle mr-2">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M12 8v8"/>
-            <path d="M8 12h8"/>
-          </svg>
-          Nueva tarea
-        </a>
-      </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-circle mr-2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 8v8"/>
+                        <path d="M8 12h8"/>
+                    </svg>
+                    Nueva Tarea
+                </a>
+            </div>
 
-      <div class="overflow-x-auto rounded-lg shadow-md border border-gray-200">
-        <table class="table table-striped">
-          <thead>
-          <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Descripción</th>
-            <th scope="col">Categorías</th>
-            <th scope="col">Estado</th>
-            <th scope="col">Acciones</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr th:each="item : ${tareas}">
-            <td th:text="${item.id}"></td>
-            <td th:text="${item.description}"></td>
-            <td th:text="${item.categoria}"></td>
-            <td>
-              <div class="flex items-center gap-2">
-                                <span th:if="${item.estado == 'Pendiente'}"
-                                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 cursor-pointer hover:bg-yellow-200 transition-colors duration-150"
-                                      th:title="Marcar como completada"
-                                      th:onclick="|
-                                            Swal.fire({
-                                                title: '¿Marcar como completada?',
-                                                text: 'Esta acción marcará la tarea como completada y la eliminará automáticamente.',
-                                                icon: 'warning',
-                                                showCancelButton: true,
-                                                confirmButtonColor: '#3085d6',
-                                                cancelButtonColor: '#d33',
-                                                confirmButtonText: 'Sí, ¡completar y eliminar!',
-                                                cancelButtonText: 'Cancelar'
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    window.location.href = '${@{|/tareas/mark-as-completed-and-delete/${item.id}|}';
-                                                }
-                                            });
-                                        |">
-                                    Pendiente
-                                </span>
-                <span th:if="${item.estado == 'Completada'}"
-                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Completada</span>
-              </div>
-            </td>
-            <td class="space-x-2">
-              <a th:href="@{/tareas/details/{id} (id = ${item.id})}" class="btn-outline-secondary">Detalles</a>
-              <a th:href="@{/tareas/edit/{id} (id = ${item.id})}" class="btn-outline-info">Editar</a>
-              <button type="button"
-                      class="btn-outline-danger"
-                      th:onclick="|
-                                        Swal.fire({
-                                            title: '¿Estás seguro?',
-                                            text: '¡No podrás revertir la eliminación!',
-                                            icon: 'warning',
-                                            showCancelButton: true,
-                                            confirmButtonColor: '#3085d6',
-                                            cancelButtonColor: '#d33',
-                                            confirmButtonText: 'Sí, ¡eliminar!',
-                                            cancelButtonText: 'Cancelar'
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-                                                window.location.href = '${@{|/tareas/remove/${item.id}|}';
-                                            }
-                                        });
-                                    |">
-                Eliminar
-              </button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
+            <div class="overflow-x-auto rounded-lg shadow-md border border-gray-200">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Descripción</th>
+                        <th>Categoría</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="tarea : ${tareas}">
+                        <td th:text="${tarea.id}"></td>
+                        <td th:text="${tarea.descripcion}"></td>
+                        <td th:text="${tarea.categoria != null ? tarea.categoria.nombre : 'Sin categoría'}"></td>
+                        <td>
+                            <a th:href="@{'/tarea/toggleStatus/' + ${tarea.id}}"
+                               th:text="${tarea.strStatus}"
+                               th:classappend="${tarea.status == 1} ? ' btn-estado-completada' : ' btn-estado-pendiente'"></a>
+                        </td>
+                        <td class="space-x-2">
+                            <a th:href="@{'/tarea/details/' + ${tarea.id}}" class="btn-outline-success">Detalles</a>
+                            <a th:href="@{'/tarea/edit/' + ${tarea.id}}" class="btn-outline-edit">Editar</a>
+                            <a th:href="@{'/tarea/delete/' + ${tarea.id}}" class="btn-outline-danger">Eliminar</a>
+                        </td>
 
-      <!-- Paginación con estilos mejorados -->
-      <nav class="mt-8 flex justify-center" aria-label="Page navigation example">
-        <ul class="pagination">
-          <li class="page-item" th:each="pageNumber : ${pageNumbers}">
-            <a class="page-link"
-               th:href="@{|/tarea?page=${pageNumber}|}"
-               th:text="${pageNumber}"
-               th:classappend="${pageNumber == currentPage} ? 'active' : ''"></a>
-          </li>
-        </ul>
-      </nav>
+                    </tr>
+                    <tr th:if="${tareas.isEmpty()}">
+                        <td colspan="5" class="text-center text-gray-500 py-4">No hay tareas registradas.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
+        </div>
     </div>
-  </div>
 </div>
 </body>
 </html>

@@ -1,57 +1,159 @@
 <html lang="en"
-      xmlns:layout="http://www.ultrang.net.nz/thymeleaf/layout"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="/layouts/_mainLayout" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Incluir SweetAlert2 desde un CDN para los mensajes y confirmaciones -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-base {
+            @apply flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg shadow-sm transition duration-150 ease-in-out transform hover:scale-105;
+        }
+        .btn-outline-primary {
+            @apply btn-base text-blue-700 bg-white border border-blue-500 hover:bg-blue-50 hover:border-blue-600;
+        }
+        .btn-outline-secondary {
+            @apply btn-base text-gray-700 bg-white border border-gray-300 hover:bg-gray-50;
+        }
+        .btn-outline-info {
+            @apply btn-base text-purple-700 bg-white border border-purple-300 hover:bg-purple-50;
+        }
+        .btn-outline-danger {
+            @apply btn-base text-red-700 bg-white border border-red-300 hover:bg-red-50;
+        }
 
+        .table {
+            @apply min-w-full divide-y divide-gray-200;
+        }
+        .table-striped tbody tr:nth-child(odd) {
+            @apply bg-white;
+        }
+        .table-striped tbody tr:nth-child(even) {
+            @apply bg-gray-50;
+        }
+        .table thead th {
+            @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50;
+        }
+        .table tbody td {
+            @apply px-6 py-4 whitespace-nowrap text-sm text-gray-800;
+        }
+
+        .pagination {
+            @apply flex items-center -space-x-px;
+        }
+        .pagination .page-item .page-link {
+            @apply relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 transition duration-150 ease-in-out rounded-lg mx-1;
+        }
+        .pagination .page-item.active .page-link {
+            @apply bg-blue-600 text-white border-blue-600;
+        }
+    </style>
+</head>
+<body>
 <div layout:fragment="content">
-    <div th:if="${msg != null}">
-        <script>
-            Swal.fire({
-            title: "Confirmación",
-            text: '[[${msg}]]',
-            icon: "success"
-            });
-        </script>
+    <div class="min-h-screen bg-white flex items-center justify-center p-6 sm:p-8">
+        <div class="bg-white p-8 sm:p-10 rounded-3xl shadow-2xl w-full max-w-4xl border border-gray-200">
 
+            <!-- Mensajes de confirmación y error con SweetAlert2 -->
+            <div th:if="${msg != null}">
+                <script th:inline="javascript">
+                    Swal.fire({
+                        title: "Confirmación",
+                        text: [[${msg}]],
+                        icon: "success"
+                    });
+                </script>
+            </div>
+
+            <div th:if="${error != null}">
+                <script th:inline="javascript">
+                    Swal.fire({
+                        title: "Error",
+                        text: [[${error}]],
+                        icon: "error"
+                    });
+                </script>
+            </div>
+
+            <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center">Gestión de Categorías</h1>
+            <div class="mb-6 flex justify-start">
+                <a th:href="@{/categoria/create}"
+                   class="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white
+                          bg-gradient-to-r from-blue-500 to-blue-700 rounded-full shadow-lg
+                          hover:from-blue-600 hover:to-blue-800 transform hover:scale-105
+                          focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-75
+                          transition duration-300 ease-in-out">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-circle mr-2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 8v8"/>
+                        <path d="M8 12h8"/>
+                    </svg>
+                    Nueva Categoría
+                </a>
+            </div>
+
+            <div class="overflow-x-auto rounded-lg shadow-md border border-gray-200">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- 🔑 Ahora usamos "categorias" (plural) -->
+                    <tr th:each="item : ${categorias}">
+                        <td th:text="${item.id}"></td>
+                        <td th:text="${item.nombre}"></td>
+                        <td class="space-x-2">
+                            <a th:href="@{/categoria/details/{id}(id=${item.id})}" class="btn-outline-secondary">Detalles</a>
+                            <a th:href="@{/categoria/edit/{id}(id=${item.id})}" class="btn-outline-info">Editar</a>
+                            <button type="button"
+                                    class="btn-outline-danger"
+                                    th:onclick="|
+                                        Swal.fire({
+                                            title: '¿Estás seguro?',
+                                            text: '¡No podrás revertir la eliminación!',
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+                                            confirmButtonText: 'Sí, ¡eliminar!',
+                                            cancelButtonText: 'Cancelar'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                window.location.href = '/categoria/remove/' + [[${item.id}]];
+                                            }
+                                        });
+                                    |">
+                                Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 🔑 Paginación corregida -->
+            <nav class="mt-8 flex justify-center" aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item" th:each="pageNumber : ${pageNumbers}">
+                        <a class="page-link"
+                           th:href="@{|/categoria?page=${pageNumber}|}"
+                           th:text="${pageNumber + 1}"
+                           th:classappend="${pageNumber == currentPage} ? ' active' : ''"></a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
     </div>
-
-    <!-- Mostrar mensaje de error en caso de error -->
-    <div th:if="${error != null}">
-        <script>
-            Swal.fire({
-              title: "Error",
-              text: '[[${error}]]',
-              icon: "error"
-            });
-        </script>
-    </div>
-
-    <h1>Gestión de categorias</h1>
-    <a th:href="@{/categorias/create}" class="btn btn-outline-primary"> Nueva categoria</a>
-    <table class = "table table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="item : ${categorias}">
-            <td th:text="${item.id}"></td>
-            <td th:text="${item.nombre}"></td>
-            <td>
-                <a th:href="@{/categoria/details/{id} (id = ${item.id})}" class="ptn btn-outline-secundary">Detalles</a>
-                <a th:href="@{/categoria/edit/{id} (id = ${item.id})}" class="ptn btn-outline-info">Editar</a>
-                <a th:href="@{/categoria/remove/{id} (id = ${item.id})}" class="ptn btn-outline-danger">Eliminar</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            <li class="page-item" th:each="pageNumber : ${pageNumbers}">
-                <a class="page-link" th:herf="@{|/categorias?page=${pageNumber}|}" th:text="${pageNumber}"></a>
-            </li>
-        </ul>
-    </nav>
 </div>
+</body>
+</html>

@@ -13,32 +13,37 @@ import java.util.Optional;
 
 @Service
 public class TareaService implements ITareaService {
+
     @Autowired
     private ITareaRepository tareaRepository;
 
     @Override
     public Page<Tareas> buscarTodosPaginados(Pageable pageable) {
         return tareaRepository.findAll(pageable);
-        }
-
+    }
 
     @Override
     public List<Tareas> obtenerTodos() {
-        return List.of();
+        return tareaRepository.findAll();
     }
 
     @Override
     public Optional<Tareas> buscarPorId(Integer id) {
-        return Optional.empty();
+        return tareaRepository.findById(id);
     }
 
     @Override
     public Tareas crearOEditar(Tareas tareas) {
-        return null;
+        return tareaRepository.save(tareas);
     }
 
     @Override
-    public void eliminarPorId(Integer grupo) {
+    public void eliminarPorId(Integer id) {
+        tareaRepository.deleteById(id);
+    }
 
+    @Override
+    public List<Tareas> buscarTodos() {
+        return tareaRepository.findAll();
     }
 }

@@ -15,33 +15,34 @@
     <div class="min-h-screen bg-white flex items-center justify-center p-6 sm:p-8">
         <div class="bg-white p-8 sm:p-10 rounded-3xl shadow-2xl w-full max-w-xl border border-gray-200 transform hover:scale-102 transition-transform duration-300 ease-in-out">
             <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center flex items-center justify-center gap-4">
-                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-600">
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-600">
                     <circle cx="12" cy="12" r="10"/>
                     <path d="M12 8v8"/>
                     <path d="M8 12h8"/>
                 </svg>
-                <span th:text="${tarea.id == null} ? 'Crear Tarea' : 'Editar Tarea'"></span>
+                Eliminar Tarea
             </h1>
             <hr class="mb-8 border-gray-300" />
 
-            <form th:action="@{${tarea.id == null} ? '/tarea/create' : '/tarea/edit/' + ${tarea.id}}" th:object="${tarea}" method="post" class="space-y-8">
+            <form th:action="@{'/tarea/delete/' + ${tarea.id}}" th:object="${tarea}" method="post" class="space-y-8">
 
                 <!-- Descripción -->
                 <div>
                     <label for="descripcion" class="block text-xl font-semibold text-gray-700 mb-3">Descripción</label>
-                    <input id="descripcion" th:field="*{descripcion}" type="text" required
-                           placeholder="Ej: Comprar libros, Hacer tarea..."
-                           class="mt-1 block w-full px-5 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-3 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 transition duration-200 ease-in-out text-lg" />
+                    <input id="descripcion" th:field="*{descripcion}" type="text" disabled
+                           class="mt-1 block w-full px-5 py-3 border border-gray-300 rounded-xl shadow-sm text-gray-900 text-lg" />
                 </div>
 
                 <!-- Categoría -->
                 <div>
                     <label for="categoria" class="block text-xl font-semibold text-gray-700 mb-3">Categoría</label>
-                    <select id="categoria" name="categoria" required
-                            class="mt-1 block w-full px-5 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-3 focus:ring-blue-500 focus:border-blue-500 text-gray-900 text-lg">
-                        <option value="">-- Seleccione una categoría --</option>
-                        <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}"
-                                th:selected="${tarea.categoria != null} ? ${cat.id} == ${tarea.categoria.id} : false"></option>
+                    <select id="categoria" name="categoria" disabled
+                            class="mt-1 block w-full px-5 py-3 border border-gray-300 rounded-xl shadow-sm text-gray-900 text-lg">
+                        <option th:each="cat : ${categorias}"
+                                th:value="${cat.id}"
+                                th:text="${cat.nombre}"
+                                th:selected="${tarea.categoria != null} ? (${cat.id} == ${tarea.categoria.id}) : false">
+                        </option>
                     </select>
                 </div>
 
@@ -50,8 +51,8 @@
                 <!-- Botones -->
                 <div class="flex flex-col sm:flex-row justify-end gap-5">
                     <button type="submit"
-                            class="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-3 border border-transparent text-lg font-bold rounded-xl shadow-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-3 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 ease-in-out transform hover:-translate-y-1 hover:shadow-xl">
-                        Guardar
+                            class="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-3 border border-transparent text-lg font-bold rounded-xl shadow-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-3 focus:ring-offset-2 focus:ring-red-500 transition duration-200 ease-in-out transform hover:-translate-y-1 hover:shadow-xl">
+                        Eliminar
                     </button>
                     <a th:href="@{/tarea}"
                        class="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-3 border border-gray-300 text-lg font-bold rounded-xl shadow-lg text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-3 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 ease-in-out transform hover:-translate-y-1 hover:shadow-xl">

@@ -1,63 +1,38 @@
 package org.esfe.modelos;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "tareas")
 public class Tareas {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank(message = "La descripción es requerida")
     private String descripcion;
-    private String categoria;
-    private byte status;
 
-    public Integer getId() {
-        return id;
-    }
+    @ManyToOne
+    @JoinColumn(name = "categoriaid")
+    private Categorias categoria;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    private Byte status; // 1 = Completada, 2 = Pendiente
 
-    public String getDescripcion() {
-        return descripcion;
-    }
+    // Getters y setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-    public String getCategoria() {
-        return categoria;
-    }
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
-    public void setCategoria(String gategoria) {
-        this.categoria = categoria;
-    }
+    public Categorias getCategoria() { return categoria; }
+    public void setCategoria(Categorias categoria) { this.categoria = categoria; }
 
-    public byte getStatus() {
-        return status;
-    }
+    public Byte getStatus() { return status; }
+    public void setStatus(Byte status) { this.status = status; }
 
-    public void setStatus(byte status) {
-        this.status = status;
-    }
-    public String getStrEstatus(){
-        String str="";
-        switch (status) {
-            case 1:
-                str = "COMPLETADA";
-                break;
-            case 2:
-                str = "PENDIENTE";
-                break;
-            default:
-                str = "";
-        }
-        return str;
+    // Getter adicional para mostrar el estado como texto
+    public String getStrStatus() {
+        if (status == null) return "Desconocido";
+        return status == 1 ? "Completada" : "Pendiente";
     }
 }
