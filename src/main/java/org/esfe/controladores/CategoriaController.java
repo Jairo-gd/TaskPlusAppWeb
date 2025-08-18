@@ -31,7 +31,6 @@ public class CategoriaController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", pagina.getTotalPages());
 
-        // Para pintar los números de paginación
         if (pagina.getTotalPages() > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(0, pagina.getTotalPages() - 1)
                     .boxed()
@@ -39,16 +38,14 @@ public class CategoriaController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
 
-        return "categoria/index"; // ruta de tu index.html
+        return "categoria/index";
     }
-
 
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("categoria", new Categorias());
         return "categoria/create";
     }
-
 
     @PostMapping("/save")
     public String save(@ModelAttribute("categoria") Categorias categoria, Model model) {
@@ -57,7 +54,6 @@ public class CategoriaController {
         return "redirect:/categoria";
     }
 
-    //  Editar
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable Integer id, Model model) {
         Categorias categoria = categoriaService.buscarPorId(id)
@@ -73,7 +69,6 @@ public class CategoriaController {
         return "redirect:/categoria";
     }
 
-
     @GetMapping("/details/{id}")
     public String details(@PathVariable Integer id, Model model) {
         Categorias categoria = categoriaService.buscarPorId(id)
@@ -82,9 +77,16 @@ public class CategoriaController {
         return "categoria/details";
     }
 
+    @GetMapping("/delete/{id}")
+    public String deleteForm(@PathVariable Integer id, Model model) {
+        Categorias categoria = categoriaService.buscarPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada con id: " + id));
+        model.addAttribute("categoria", categoria);
+        return "categoria/delete"; // Aquí va tu delete.html
+    }
 
-    @GetMapping("/remove/{id}")
-    public String remove(@PathVariable Integer id, Model model) {
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Integer id, Model model) {
         categoriaService.eliminarPorId(id);
         model.addAttribute("msg", "Categoría eliminada con éxito");
         return "redirect:/categoria";
