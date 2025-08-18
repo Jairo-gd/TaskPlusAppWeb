@@ -57,7 +57,7 @@ public class CategoriaController {
         return "redirect:/categoria";
     }
 
-    // ✅ Editar
+    //  Editar
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable Integer id, Model model) {
         Categorias categoria = categoriaService.buscarPorId(id)
