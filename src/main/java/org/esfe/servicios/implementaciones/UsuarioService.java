@@ -4,32 +4,31 @@ import org.esfe.modelos.Usuario;
 import org.esfe.repositorios.IUsuarioRepository;
 import org.esfe.servicios.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.stereotype.Service;
 
-public abstract class UsuarioService extends Usuario implements IUsuarioService {
-    private Map<String, UsuarioService> usuariosRegistrados = new HashMap<>();
+@Service
+public class UsuarioService implements IUsuarioService {
+
     @Autowired
     private IUsuarioRepository usuarioRepository;
 
     @Override
     public Usuario registrar(Usuario usuario) {
-        return null;
+        // Guardar el usuario en la BD
+        return usuarioRepository.save(usuario);
     }
 
     @Override
     public Usuario login(String email, String password) {
-        Usuario u = usuariosRegistrados.get(email);
-        if (u != null && u.getPassword().equals(password)) {
-            return u;
+        Usuario usuario = usuarioRepository.findByEmail(email);
+        if (usuario != null && usuario.getPassword().equals(password)) {
+            return usuario;
         }
         return null;
     }
 
     @Override
-    public Usuario obtenerPorCorreo(String correo) {
-        return usuariosRegistrados.get(correo);
+    public Usuario obtenerPorEmail(String email) {
+        return usuarioRepository.findByEmail(email);
     }
 }
-
-

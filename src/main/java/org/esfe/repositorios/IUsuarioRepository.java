@@ -1,9 +1,8 @@
 package org.esfe.repositorios;
 
-import org.esfe.modelos.Tareas;
+import org.esfe.modelos.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface IUsuarioRepository extends JpaRepository<Tareas, Integer> {
-
+public interface IUsuarioRepository extends JpaRepository<Usuario, Integer> {
+    Usuario findByEmail(String email);
 }
-
