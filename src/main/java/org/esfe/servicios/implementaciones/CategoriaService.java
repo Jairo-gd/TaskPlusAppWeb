@@ -1,6 +1,7 @@
 package org.esfe.servicios.implementaciones;
 
 import org.esfe.modelos.Categorias;
+import org.esfe.modelos.Usuario;
 import org.esfe.repositorios.ICategoriaRepository;
 import org.esfe.servicios.interfaces.ICategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,12 @@ public class CategoriaService implements ICategoriaService {
 
     @Override
     public List<Categorias> obtenerTodos() {
-        // Único método para obtener todas las categorías
-        return categoriaRepository.findAll();
+        return categoriaRepository.findAll(); // ✅ Ahora trae todas las categorías
+    }
+
+    @Override
+    public List<Categorias> obtenerPorUsuario(Usuario usuario) {
+        return categoriaRepository.findByUsuario(usuario); // ✅ Método filtrado por usuario
     }
 
     @Override
@@ -45,8 +50,6 @@ public class CategoriaService implements ICategoriaService {
 
     @Override
     public List<Categorias> buscarTodos() {
-        // Puedes decidir eliminarlo si no lo usas,
-        // o simplemente devolver todas las categorías
         return categoriaRepository.findAll();
     }
 }

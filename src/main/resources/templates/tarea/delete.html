@@ -50,12 +50,31 @@
 
                 <!-- Botones -->
                 <div class="flex flex-col sm:flex-row justify-end gap-5">
+                    <!-- Botón eliminar con ícono -->
                     <button type="submit"
                             class="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-3 border border-transparent text-lg font-bold rounded-xl shadow-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-3 focus:ring-offset-2 focus:ring-red-500 transition duration-200 ease-in-out transform hover:-translate-y-1 hover:shadow-xl">
+                        <!-- Ícono de papelera -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                             stroke-linejoin="round" class="feather feather-trash">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6l-2 14H7L5 6"></path>
+                            <path d="M10 11v6"></path>
+                            <path d="M14 11v6"></path>
+                        </svg>
                         Eliminar
                     </button>
+
+                    <!-- Botón regresar con ícono -->
                     <a th:href="@{/tarea}"
                        class="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-3 border border-gray-300 text-lg font-bold rounded-xl shadow-lg text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-3 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 ease-in-out transform hover:-translate-y-1 hover:shadow-xl">
+                        <!-- Ícono de flecha atrás -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                             stroke-linejoin="round" class="feather feather-arrow-left">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
                         Regresar
                     </a>
                 </div>

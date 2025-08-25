@@ -29,20 +29,36 @@
                 <!-- Descripción -->
                 <div>
                     <label for="descripcion" class="block text-xl font-semibold text-gray-700 mb-3">Descripción</label>
-                    <input id="descripcion" th:field="*{descripcion}" type="text" required
-                           placeholder="Ej: Comprar libros, Hacer tarea..."
-                           class="mt-1 block w-full px-5 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-3 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 transition duration-200 ease-in-out text-lg" />
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                            <!-- Icono lápiz -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13l6-6m2-2a2.828 2.828 0 114 4l-9.9 9.9a4 4 0 01-1.414.94l-4.95 1.657 1.657-4.95a4 4 0 01.94-1.414l9.9-9.9z"/>
+                            </svg>
+                        </span>
+                        <input id="descripcion" th:field="*{descripcion}" type="text" required
+                               placeholder="Ej: Comprar libros, Hacer tarea..."
+                               class="pl-12 pr-5 py-3 block w-full border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-3 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 transition duration-200 ease-in-out text-lg" />
+                    </div>
                 </div>
 
                 <!-- Categoría -->
                 <div>
                     <label for="categoria" class="block text-xl font-semibold text-gray-700 mb-3">Categoría</label>
-                    <select id="categoria" name="categoria" required
-                            class="mt-1 block w-full px-5 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-3 focus:ring-blue-500 focus:border-blue-500 text-gray-900 text-lg">
-                        <option value="">-- Seleccione una categoría --</option>
-                        <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}"
-                                th:selected="${tarea.categoria != null} ? ${cat.id} == ${tarea.categoria.id} : false"></option>
-                    </select>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                            <!-- Icono carpeta -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h4l2 2h12v11H3z"/>
+                            </svg>
+                        </span>
+                        <select id="categoria" name="categoria" required
+                                class="pl-12 pr-5 py-3 block w-full border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-3 focus:ring-blue-500 focus:border-blue-500 text-gray-900 text-lg">
+                            <option value="">-- Seleccione una categoría --</option>
+                            <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}"
+                                    th:selected="${tarea.categoria != null} ? ${cat.id} == ${tarea.categoria.id} : false"></option>
+                        </select>
+                    </div>
                 </div>
 
                 <hr class="my-8 border-gray-300" />
@@ -51,10 +67,18 @@
                 <div class="flex flex-col sm:flex-row justify-end gap-5">
                     <button type="submit"
                             class="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-3 border border-transparent text-lg font-bold rounded-xl shadow-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-3 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 ease-in-out transform hover:-translate-y-1 hover:shadow-xl">
+                        <!-- Icono guardar -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
                         Guardar
                     </button>
                     <a th:href="@{/tarea}"
                        class="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-3 border border-gray-300 text-lg font-bold rounded-xl shadow-lg text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-3 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 ease-in-out transform hover:-translate-y-1 hover:shadow-xl">
+                        <!-- Icono regresar -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
                         Regresar
                     </a>
                 </div>

@@ -17,6 +17,11 @@ public class Tareas {
 
     private Byte status; // 1 = Completada, 2 = Pendiente
 
+    // 🔑 Relación con Usuario
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
+
     // Getters y setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
@@ -29,6 +34,9 @@ public class Tareas {
 
     public Byte getStatus() { return status; }
     public void setStatus(Byte status) { this.status = status; }
+
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 
     // Getter adicional para mostrar el estado como texto
     public String getStrStatus() {

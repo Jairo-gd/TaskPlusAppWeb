@@ -1,5 +1,6 @@
 package org.esfe.controladores;
 
+import jakarta.servlet.http.HttpSession;
 import org.esfe.modelos.Usuario;
 import org.esfe.servicios.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,45 +9,63 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/auth")
+@RequestMapping("/usuario")
 public class UsuarioController {
 
     @Autowired
     private IUsuarioService usuarioService;
 
-    // Página de registro
-    @GetMapping("/registro")
+    // Mostrar formulario de registro
+    @GetMapping("/register")
     public String mostrarRegistro(Model model) {
         model.addAttribute("usuario", new Usuario());
-        return "auth/registro"; // Vista: src/main/resources/templates/auth/registro.html
+        return "usuario/register";
     }
 
-    @PostMapping("/registro")
+    // Procesar registro
+    @PostMapping("/register")
     public String registrar(@ModelAttribute Usuario usuario, Model model) {
         Usuario nuevo = usuarioService.registrar(usuario);
         if (nuevo != null) {
-            model.addAttribute("mensaje", "Registro exitoso. Ahora puedes iniciar sesión.");
-            return "redirect:/auth/login";
+            return "redirect:/usuario/login?success"; // redirige al login con query param
         }
-        model.addAttribute("error", "Error al registrar el usuario.");
-        return "auth/registro";
+        model.addAttribute("usuario", usuario);
+        model.addAttribute("error", "Error al registrar el usuario. Verifica los datos.");
+        return "usuario/register";
     }
 
-    // Página de login
+    // Mostrar formulario de login
     @GetMapping("/login")
-    public String mostrarLogin(Model model) {
+    public String mostrarLogin(Model model,
+                               @RequestParam(value = "success", required = false) String success) {
         model.addAttribute("usuario", new Usuario());
-        return "auth/login"; // Vista: src/main/resources/templates/auth/login.html
+
+        if (success != null) {
+            model.addAttribute("mensaje", "Registro exitoso. Ahora puedes iniciar sesión.");
+        }
+        return "usuario/login";
     }
 
+    // Procesar login
     @PostMapping("/login")
-    public String login(@ModelAttribute Usuario usuario, Model model) {
+    public String login(@ModelAttribute Usuario usuario, HttpSession session, Model model) {
         Usuario u = usuarioService.login(usuario.getEmail(), usuario.getPassword());
+
         if (u != null) {
-            model.addAttribute("usuarioActivo", u);
-            return "redirect:/"; // Redirige a la página principal
+            // 👇 se guarda como usuarioActivo para que el layout lo pueda leer
+            session.setAttribute("usuarioActivo", u);
+            return "redirect:/"; // va al HomeController
         }
+
+        model.addAttribute("usuario", usuario);
         model.addAttribute("error", "Correo o contraseña incorrectos.");
-        return "auth/login";
+        return "usuario/login";
+    }
+
+    // Logout
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/usuario/login";
     }
 }

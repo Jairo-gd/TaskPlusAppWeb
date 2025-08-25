@@ -22,7 +22,7 @@
                 Editar Tarea
             </h1>
             <hr class="mb-8 border-gray-300" />
-
+            <!-- IMPORTANTE: Solo editar descripcion, categoria y estado. El usuario se asigna en el controlador -->
             <form th:action="@{'/tarea/edit/' + ${tarea.id}}" th:object="${tarea}" method="post" class="space-y-8">
 
                 <!-- Descripción -->
@@ -32,20 +32,16 @@
                            placeholder="Ej: Comprar libros, Hacer tarea..."
                            class="mt-1 block w-full px-5 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-3 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 transition duration-200 ease-in-out text-lg" />
                 </div>
-
                 <!-- Categoría -->
                 <div>
                     <label for="categoria" class="block text-xl font-semibold text-gray-700 mb-3">Categoría</label>
-                    <select id="categoria" name="categoria" required
+                    <select id="categoria" th:field="*{categoria}" required
                             class="mt-1 block w-full px-5 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-3 focus:ring-blue-500 focus:border-blue-500 text-gray-900 text-lg">
                         <option value="">-- Seleccione una categoría --</option>
-                        <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}"
-                                th:selected="${tarea.categoria != null} ? ${cat.id} == ${tarea.categoria.id} : false"></option>
+                        <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}"></option>
                     </select>
                 </div>
-
                 <hr class="my-8 border-gray-300" />
-
                 <!-- Botones -->
                 <div class="flex flex-col sm:flex-row justify-end gap-5">
                     <button type="submit"
