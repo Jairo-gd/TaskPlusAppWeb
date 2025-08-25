@@ -1,7 +1,9 @@
 package org.esfe.controladores;
 
 import org.esfe.modelos.Categorias;
+import org.esfe.modelos.Tareas;
 import org.esfe.modelos.Usuario;
+import org.esfe.repositorios.ICategoriaRepository;
 import org.esfe.servicios.interfaces.ICategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,29 +20,35 @@ public class CategoriaController {
 
     @Autowired
     private ICategoriaService categoriaService;
+    @Autowired
+    private ICategoriaRepository categoriaRepository;
 
+    // ✅ Listar categorías del usuario logueado
     @GetMapping
     public String index(Model model, HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
-
-        if (usuario == null) {
-            return "redirect:/usuario/login"; // ⚡ usar redirect para que se cargue bien el login
+        Usuario usuarioActivo = (Usuario) session.getAttribute("usuarioActivo");
+        if (usuarioActivo == null) {
+            return "redirect:/login"; // redirigir si no hay sesión
         }
 
-        List<Categorias> categorias = categoriaService.obtenerPorUsuario(usuario);
+        List<Categorias> categorias = categoriaRepository.findByUsuario(usuarioActivo);
         model.addAttribute("categorias", categorias);
         return "categoria/index";
     }
 
+    // ✅ Mostrar formulario de creación
     @GetMapping("/create")
     public String create(Model model, HttpSession session) {
-        if (session.getAttribute("usuarioLogueado") == null) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuario == null) {
             return "redirect:/usuario/login";
         }
+
         model.addAttribute("categoria", new Categorias());
         return "categoria/create";
     }
 
+    // ✅ Guardar categoría nueva
     @PostMapping("/save")
     public String save(@ModelAttribute("categoria") Categorias categoria,
                        HttpSession session,
@@ -53,10 +61,11 @@ public class CategoriaController {
         categoria.setUsuario(usuario);
         categoriaService.crearOEditar(categoria);
 
-        redirectAttributes.addFlashAttribute("msg", "Categoría guardada con éxito");
+        redirectAttributes.addFlashAttribute("msg", "✅ Categoría guardada con éxito");
         return "redirect:/categoria";
     }
 
+    // ✅ Formulario de edición
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable Integer id, Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
@@ -72,9 +81,10 @@ public class CategoriaController {
         }
 
         model.addAttribute("categoria", categoria);
-        return "categoria/edit";
+        return "categorias/edit";
     }
 
+    // ✅ Actualizar categoría
     @PostMapping("/update")
     public String update(@ModelAttribute("categoria") Categorias categoria,
                          HttpSession session,
@@ -84,13 +94,15 @@ public class CategoriaController {
             return "redirect:/usuario/login";
         }
 
+        // Reasignar usuario antes de guardar
         categoria.setUsuario(usuario);
         categoriaService.crearOEditar(categoria);
 
-        redirectAttributes.addFlashAttribute("msg", "Categoría actualizada con éxito");
+        redirectAttributes.addFlashAttribute("msg", "✅ Categoría actualizada con éxito");
         return "redirect:/categoria";
     }
 
+    // ✅ Ver detalles
     @GetMapping("/details/{id}")
     public String details(@PathVariable Integer id, Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
@@ -106,9 +118,10 @@ public class CategoriaController {
         }
 
         model.addAttribute("categoria", categoria);
-        return "categoria/details";
+        return "categorias/details";
     }
 
+    // ✅ Confirmar borrado
     @GetMapping("/delete/{id}")
     public String deleteForm(@PathVariable Integer id, Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
@@ -124,9 +137,10 @@ public class CategoriaController {
         }
 
         model.addAttribute("categoria", categoria);
-        return "categoria/delete";
+        return "categorias/delete";
     }
 
+    // ✅ Eliminar categoría
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable Integer id,
                          HttpSession session,
@@ -144,7 +158,7 @@ public class CategoriaController {
         }
 
         categoriaService.eliminarPorId(id);
-        redirectAttributes.addFlashAttribute("msg", "Categoría eliminada con éxito");
+        redirectAttributes.addFlashAttribute("msg", "🗑️ Categoría eliminada con éxito");
         return "redirect:/categoria";
     }
 }

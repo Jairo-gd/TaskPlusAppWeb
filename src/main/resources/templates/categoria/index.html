@@ -114,6 +114,9 @@
                             <a th:href="@{/categoria/delete/{id}(id=${item.id})}" class="btn-outline-danger">Eliminar</a>
                         </td>
                     </tr>
+                    <tr th:if="${categorias.isEmpty()}">
+                        <td colspan="5" class="text-center text-gray-500 py-4">No hay categorías registradas.</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
