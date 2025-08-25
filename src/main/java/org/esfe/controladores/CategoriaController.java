@@ -30,7 +30,6 @@ public class CategoriaController {
         if (usuarioActivo == null) {
             return "redirect:/login"; // redirigir si no hay sesión
         }
-
         List<Categorias> categorias = categoriaRepository.findByUsuario(usuarioActivo);
         model.addAttribute("categorias", categorias);
         return "categoria/index";
@@ -40,10 +39,6 @@ public class CategoriaController {
     @GetMapping("/create")
     public String create(Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
-        if (usuario == null) {
-            return "redirect:/usuario/login";
-        }
-
         model.addAttribute("categoria", new Categorias());
         return "categoria/create";
     }
@@ -60,7 +55,6 @@ public class CategoriaController {
 
         categoria.setUsuario(usuario);
         categoriaService.crearOEditar(categoria);
-
         redirectAttributes.addFlashAttribute("msg", "✅ Categoría guardada con éxito");
         return "redirect:/categoria";
     }
