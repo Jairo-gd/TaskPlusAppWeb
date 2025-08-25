@@ -30,7 +30,7 @@ public class CategoriaService implements ICategoriaService {
 
     @Override
     public List<Categorias> obtenerPorUsuario(Usuario usuario) {
-        return categoriaRepository.findByUsuario(usuario); // ✅ Método filtrado por usuario
+        return categoriaRepository.findByUsuario(usuario); //
     }
 
     @Override

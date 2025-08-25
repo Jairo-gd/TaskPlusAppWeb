@@ -95,7 +95,6 @@
                             <a th:href="@{'/tarea/edit/' + ${tarea.id}}" class="btn-outline-edit">Editar</a>
                             <a th:href="@{'/tarea/delete/' + ${tarea.id}}" class="btn-outline-danger">Eliminar</a>
                         </td>
-
                     </tr>
                     <tr th:if="${tareas.isEmpty()}">
                         <td colspan="5" class="text-center text-gray-500 py-4">No hay tareas registradas.</td>
