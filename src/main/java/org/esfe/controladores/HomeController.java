@@ -14,6 +14,6 @@ public class HomeController {
         if (session.getAttribute("usuarioActivo") == null) {
             return "redirect:/usuario/login";
         }
-        return "home/index"; // tu página principal
+        return "home/index";
     }
 }

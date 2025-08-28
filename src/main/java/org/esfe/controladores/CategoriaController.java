@@ -21,10 +21,10 @@ public class CategoriaController {
 
     @GetMapping
     public String index(Model model, HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        Usuario usuario = (Usuario) session.getAttribute("usuarioActivo");
 
         if (usuario == null) {
-            return "redirect:/usuario/login"; // ⚡ usar redirect para que se cargue bien el login
+            return "redirect:/usuario/login";
         }
 
         List<Categorias> categorias = categoriaService.obtenerPorUsuario(usuario);
@@ -34,7 +34,7 @@ public class CategoriaController {
 
     @GetMapping("/create")
     public String create(Model model, HttpSession session) {
-        if (session.getAttribute("usuarioLogueado") == null) {
+        if (session.getAttribute("usuarioActivo") == null) {
             return "redirect:/usuario/login";
         }
         model.addAttribute("categoria", new Categorias());
@@ -45,7 +45,7 @@ public class CategoriaController {
     public String save(@ModelAttribute("categoria") Categorias categoria,
                        HttpSession session,
                        RedirectAttributes redirectAttributes) {
-        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        Usuario usuario = (Usuario) session.getAttribute("usuarioActivo");
         if (usuario == null) {
             return "redirect:/usuario/login";
         }
@@ -59,7 +59,7 @@ public class CategoriaController {
 
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable Integer id, Model model, HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        Usuario usuario = (Usuario) session.getAttribute("usuarioActivo");
         if (usuario == null) {
             return "redirect:/usuario/login";
         }
@@ -79,7 +79,7 @@ public class CategoriaController {
     public String update(@ModelAttribute("categoria") Categorias categoria,
                          HttpSession session,
                          RedirectAttributes redirectAttributes) {
-        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        Usuario usuario = (Usuario) session.getAttribute("usuarioActivo");
         if (usuario == null) {
             return "redirect:/usuario/login";
         }
@@ -93,7 +93,7 @@ public class CategoriaController {
 
     @GetMapping("/details/{id}")
     public String details(@PathVariable Integer id, Model model, HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        Usuario usuario = (Usuario) session.getAttribute("usuarioActivo");
         if (usuario == null) {
             return "redirect:/usuario/login";
         }
@@ -111,7 +111,7 @@ public class CategoriaController {
 
     @GetMapping("/delete/{id}")
     public String deleteForm(@PathVariable Integer id, Model model, HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        Usuario usuario = (Usuario) session.getAttribute("usuarioActivo");
         if (usuario == null) {
             return "redirect:/usuario/login";
         }
@@ -131,7 +131,7 @@ public class CategoriaController {
     public String delete(@PathVariable Integer id,
                          HttpSession session,
                          RedirectAttributes redirectAttributes) {
-        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        Usuario usuario = (Usuario) session.getAttribute("usuarioActivo");
         if (usuario == null) {
             return "redirect:/usuario/login";
         }

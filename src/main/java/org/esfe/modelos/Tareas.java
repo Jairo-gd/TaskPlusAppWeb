@@ -3,6 +3,7 @@ package org.esfe.modelos;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "tareas")
 public class Tareas {
 
     @Id
@@ -16,6 +17,10 @@ public class Tareas {
     private Categorias categoria;
 
     private Byte status; // 1 = Completada, 2 = Pendiente
+
+    // ✅ Nuevo campo para evitar el error
+    @Column(nullable = false)
+    private boolean completada = false;
 
     // 🔑 Relación con Usuario
     @ManyToOne
@@ -34,6 +39,9 @@ public class Tareas {
 
     public Byte getStatus() { return status; }
     public void setStatus(Byte status) { this.status = status; }
+
+    public boolean isCompletada() { return completada; }
+    public void setCompletada(boolean completada) { this.completada = completada; }
 
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }

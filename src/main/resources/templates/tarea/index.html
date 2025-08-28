@@ -73,7 +73,6 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Descripción</th>
                         <th>Categoría</th>
                         <th>Estado</th>
@@ -82,7 +81,6 @@
                     </thead>
                     <tbody>
                     <tr th:each="tarea : ${tareas}">
-                        <td th:text="${tarea.id}"></td>
                         <td th:text="${tarea.descripcion}"></td>
                         <td th:text="${tarea.categoria != null ? tarea.categoria.nombre : 'Sin categoría'}"></td>
                         <td>
@@ -97,7 +95,7 @@
                         </td>
                     </tr>
                     <tr th:if="${tareas.isEmpty()}">
-                        <td colspan="5" class="text-center text-gray-500 py-4">No hay tareas registradas.</td>
+                        <td colspan="4" class="text-center text-gray-500 py-4">No hay tareas registradas.</td>
                     </tr>
                     </tbody>
                 </table>

@@ -25,12 +25,7 @@ public class CategoriaService implements ICategoriaService {
 
     @Override
     public List<Categorias> obtenerTodos() {
-        return categoriaRepository.findAll(); // ✅ Ahora trae todas las categorías
-    }
-
-    @Override
-    public List<Categorias> obtenerPorUsuario(Usuario usuario) {
-        return categoriaRepository.findByUsuario(usuario); //
+        return categoriaRepository.findAll();
     }
 
     @Override
@@ -48,8 +43,9 @@ public class CategoriaService implements ICategoriaService {
         categoriaRepository.deleteById(id);
     }
 
+    // ✅ implementación correcta
     @Override
-    public List<Categorias> buscarTodos() {
-        return categoriaRepository.findAll();
+    public List<Categorias> obtenerPorUsuario(Usuario usuario) {
+        return categoriaRepository.findByUsuario(usuario);
     }
 }

@@ -12,7 +12,7 @@ public interface ICategoriaService {
 
     Page<Categorias> buscarTodosPaginados(Pageable pageable);
 
-    List<Categorias> obtenerTodos();
+    List<Categorias> obtenerTodos(); // 👈 Este queda
 
     Optional<Categorias> buscarPorId(Integer id);
 
@@ -20,8 +20,6 @@ public interface ICategoriaService {
 
     void eliminarPorId(Integer id);
 
-    List<Categorias> buscarTodos();
-
-    // 🔹 Método que faltaba
+    // 🔹 Método clave para filtrar por usuario
     List<Categorias> obtenerPorUsuario(Usuario usuario);
 }

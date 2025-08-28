@@ -3,8 +3,8 @@ package org.esfe.controladores;
 import org.esfe.modelos.Tareas;
 import org.esfe.modelos.Categorias;
 import org.esfe.modelos.Usuario;
-import org.esfe.repositorios.ICategoriaRepository;
 import org.esfe.repositorios.ITareaRepository;
+import org.esfe.servicios.interfaces.ICategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +21,7 @@ public class TareaController {
     private ITareaRepository tareaRepository;
 
     @Autowired
-    private ICategoriaRepository categoriaRepository;
+    private ICategoriaService categoriaService;
 
     // LISTAR SOLO LAS DEL USUARIO
     @GetMapping
@@ -38,25 +38,32 @@ public class TareaController {
 
     // CREAR - GET
     @GetMapping("/create")
-    public String createForm(Model model) {
+    public String crear(Model model, HttpSession session) {
+        Usuario usuarioActivo = (Usuario) session.getAttribute("usuarioActivo");
+        if (usuarioActivo == null) {
+            return "redirect:/login";
+        }
+
         model.addAttribute("tarea", new Tareas());
-        model.addAttribute("categorias", categoriaRepository.findAll());
+        model.addAttribute("categorias", categoriaService.obtenerPorUsuario(usuarioActivo)); // ✅ categorías del usuario
         return "tarea/create";
     }
 
     // CREAR - POST
     @PostMapping("/create")
     public String createPost(@ModelAttribute Tareas tarea,
-                             @RequestParam("categoria") Integer categoriaId,
                              HttpSession session) {
         Usuario usuarioActivo = (Usuario) session.getAttribute("usuarioActivo");
         if (usuarioActivo == null) {
             return "redirect:/login";
         }
 
-        Categorias categoria = categoriaRepository.findById(categoriaId)
-                .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
-        tarea.setCategoria(categoria);
+        // Buscar categoría desde el ID que viene en el form
+        if (tarea.getCategoria() != null && tarea.getCategoria().getId() != null) {
+            Categorias categoria = categoriaService.buscarPorId(tarea.getCategoria().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
+            tarea.setCategoria(categoria);
+        }
 
         // Asignar usuario logueado
         tarea.setUsuario(usuarioActivo);
@@ -67,6 +74,7 @@ public class TareaController {
         tareaRepository.save(tarea);
         return "redirect:/tarea";
     }
+
 
     // EDITAR - GET
     @GetMapping("/edit/{id}")
@@ -85,7 +93,7 @@ public class TareaController {
         }
 
         model.addAttribute("tarea", tarea);
-        model.addAttribute("categorias", categoriaRepository.findAll());
+        model.addAttribute("categorias", categoriaService.obtenerPorUsuario(usuarioActivo)); // ✅ categorías del usuario
         return "tarea/edit";
     }
 
@@ -100,16 +108,24 @@ public class TareaController {
             return "redirect:/login";
         }
 
-        Categorias categoria = categoriaRepository.findById(categoriaId)
+        // Buscar tarea original
+        Tareas tareaExistente = tareaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Tarea no encontrada"));
+
+        Categorias categoria = categoriaService.buscarPorId(categoriaId)
                 .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
 
-        tarea.setId(id);
-        tarea.setCategoria(categoria);
-        tarea.setUsuario(usuarioActivo); // asegurar que quede asignada al dueño
+        // Mantener datos
+        tareaExistente.setDescripcion(tarea.getDescripcion());
+        tareaExistente.setCategoria(categoria);
+        tareaExistente.setUsuario(usuarioActivo);
+        // 🔑 status no lo tocamos, queda igual
+        tareaRepository.save(tareaExistente);
 
-        tareaRepository.save(tarea);
         return "redirect:/tarea";
     }
+
+
 
     // ELIMINAR - GET
     @GetMapping("/delete/{id}")
@@ -127,7 +143,7 @@ public class TareaController {
         }
 
         model.addAttribute("tarea", tarea);
-        model.addAttribute("categorias", categoriaRepository.findAll());
+        model.addAttribute("categorias", categoriaService.obtenerPorUsuario(usuarioActivo)); // ✅ categorías del usuario
         return "tarea/delete";
     }
 
