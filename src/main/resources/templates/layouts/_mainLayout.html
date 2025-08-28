@@ -52,6 +52,9 @@
                 <li th:if="${session.usuarioActivo != null}">
                     <a class="dropdown-item" th:href="@{/usuario/logout}">Cerrar Sesión</a>
                 </li>
+                <li th:if="${session.usuarioActivo != null}">
+                    <a class="dropdown-item" th:href="@{/usuario/Reset}">Restablecer Contraseña</a>
+                </li>
             </ul>
         </li>
     </ul>

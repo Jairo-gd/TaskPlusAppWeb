@@ -1,11 +1,18 @@
 <html lang="en"
       xmlns:layout="http://www.ultrang.net.nz/thymeleaf/layout"
-      layout:decorate="/layouts/_mainLayout">
+      layout:decorate="/layouts/_mainLayout" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <div layout:fragment="content">
+
+    <!-- 🔹 Mensaje de éxito al restablecer contraseña -->
+    <div th:if="${param.resetSuccess}"
+         class="alert alert-success alert-dismissible fade show text-center mt-3"
+         role="alert">
+        ✅ Se restableció la contraseña correctamente.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
     <h1 class="text-center">Bienvenido!!!</h1>
 </div>
 
-
 </html>
-

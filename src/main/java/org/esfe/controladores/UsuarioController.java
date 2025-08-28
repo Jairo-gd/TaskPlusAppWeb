@@ -37,12 +37,18 @@ public class UsuarioController {
     // Mostrar formulario de login
     @GetMapping("/login")
     public String mostrarLogin(Model model,
-                               @RequestParam(value = "success", required = false) String success) {
+                               @RequestParam(value = "success", required = false) String success,
+                               @RequestParam(value = "resetSuccess", required = false) String resetSuccess) {
         model.addAttribute("usuario", new Usuario());
 
         if (success != null) {
             model.addAttribute("mensaje", "Registro exitoso. Ahora puedes iniciar sesión.");
         }
+
+        if (resetSuccess != null) {
+            model.addAttribute("mensaje", "Contraseña restablecida correctamente. Inicia sesión nuevamente.");
+        }
+
         return "usuario/login";
     }
 
@@ -68,4 +74,35 @@ public class UsuarioController {
         session.invalidate();
         return "redirect:/usuario/login";
     }
+
+    // Mostrar formulario de reset password
+    @GetMapping("/Reset")
+    public String mostrarFormularioReset(HttpSession session, Model model) {
+        Usuario usuarioActivo = (Usuario) session.getAttribute("usuarioActivo");
+        if (usuarioActivo == null) {
+            return "redirect:/usuario/login"; // corregido: ruta debe ser /usuario/login
+        }
+        model.addAttribute("usuarioActivo", usuarioActivo);
+        return "usuario/Reset"; // corregido: debe estar dentro de carpeta usuario/
+    }
+
+    // Procesar reset password
+    @PostMapping("/Reset")
+    public String procesarResetPassword(@RequestParam("correo") String correo,
+                                        @RequestParam("password") String nuevaPassword,
+                                        HttpSession session) {
+
+        Usuario usuarioActivo = (Usuario) session.getAttribute("usuarioActivo");
+        if (usuarioActivo == null) {
+            return "redirect:/usuario/login";
+        }
+
+        usuarioActivo.setPassword(nuevaPassword);
+        usuarioService.registrar(usuarioActivo);
+
+        session.setAttribute("usuarioActivo", usuarioActivo);
+
+        return "redirect:/?resetSuccess"; // 👈 param para mostrar mensaje
+    }
+
 }
